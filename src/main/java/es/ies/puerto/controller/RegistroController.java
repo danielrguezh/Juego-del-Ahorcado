@@ -123,8 +123,7 @@ public class RegistroController extends AbstractController {
                 return;
             }
             */
-            String tituloPantalla = ConfigManager.ConfigProperties.getProperty("profileTitle");
-            mostrarPantallaMasUsusarios(openRegistrarButton, "profile.fxml", tituloPantalla, usuario);
+            mostrarPantallaMasUsusarios(openRegistrarButton, "profile.fxml", usuario);
             return;
         }
         textMensaje.setText(ConfigManager.ConfigProperties.getProperty("errorEmailOPasswordNoCoincide"));
@@ -136,7 +135,6 @@ public class RegistroController extends AbstractController {
      */
     @FXML
     protected void onVolverAtrasClick() {
-        String tituloPantalla = ConfigManager.ConfigProperties.getProperty("loginTitle");
-        mostrarPantalla(buttonVolverAtras, "login.fxml", tituloPantalla);
+        mostrarPantalla(buttonVolverAtras, "login.fxml");
     }
 }

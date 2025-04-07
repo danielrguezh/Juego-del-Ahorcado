@@ -184,8 +184,8 @@ public abstract class AbstractController {
      * @param fxml ruta al archivo de la interfaz de la nueva pantalla
      * @param titulo de la ventana
      */
-    public void mostrarPantalla(Button button, String fxml, String titulo) {
-        if (button == null || fxml == null || fxml.isEmpty() || titulo == null || titulo.isEmpty()) {
+    public void mostrarPantalla(Button button, String fxml) {
+        if (button == null || fxml == null || fxml.isEmpty()) {
             return;
         }
         try {
@@ -193,7 +193,7 @@ public abstract class AbstractController {
             FXMLLoader fxmlLoader = new FXMLLoader(PrincipalApplication.class.getResource(fxml));
             Scene scene = new Scene(fxmlLoader.load());
             scene.getStylesheets().add(getClass().getResource("/es/ies/puerto/css/style.css").toExternalForm());
-            stage.setTitle(titulo);
+            stage.setTitle("Juego del Ahorcado.");
             stage.setResizable(false);
             stage.setScene(scene);
             stage.show();
@@ -209,8 +209,8 @@ public abstract class AbstractController {
      * @param titulo de la ventana
      * @param usuario contiene los datos que se cargaran en la nueva pantalla
      */
-    public void mostrarPantallaMasUsusarios(Button button, String fxml, String titulo, UsuarioEntity usuario) {
-        if (button == null || fxml == null || fxml.isEmpty() || titulo == null || titulo.isEmpty()) {
+    public void mostrarPantallaMasUsusarios(Button button, String fxml, UsuarioEntity usuario) {
+        if (button == null || fxml == null || fxml.isEmpty()) {
             return;
         }
         try {
@@ -220,7 +220,7 @@ public abstract class AbstractController {
             ProfileController profileController = fxmlLoader.getController();
             profileController.cargarDatosUsuario(usuario);
             Stage stage = (Stage) button.getScene().getWindow();
-            stage.setTitle(titulo);
+            stage.setTitle("Juego del Ahorcado.");
             stage.setResizable(false);
             stage.setScene(scene);
             stage.show();

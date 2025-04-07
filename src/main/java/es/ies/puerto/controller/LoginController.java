@@ -128,8 +128,7 @@ public class LoginController extends AbstractController {
             return;
         }
         
-        String tituloPantalla = ConfigManager.ConfigProperties.getProperty("profileTitle");
-        mostrarPantallaMasUsusarios(openAceptarButton, "profile.fxml", tituloPantalla, usuario);
+        mostrarPantallaMasUsusarios(openAceptarButton, "profile.fxml", usuario);
 
         /** Codigo para el json
         boolean passwordCorrecta = BCrypt.checkpw(textFieldPassword.getText(), usuario.getPassword());
@@ -153,8 +152,7 @@ public class LoginController extends AbstractController {
      */
     @FXML
     protected void openRegistrarClick() {
-        String tituloPantalla = ConfigManager.ConfigProperties.getProperty("registroTitle");
-        mostrarPantalla(openRegistrarButton, "registro.fxml", tituloPantalla);
+        mostrarPantalla(openRegistrarButton, "registro.fxml");
     }
 
     /**
@@ -163,8 +161,7 @@ public class LoginController extends AbstractController {
      */
     @FXML
     protected void openListarUsuariosClick() {
-        String tituloPantalla = ConfigManager.ConfigProperties.getProperty("usuarioTitle");
-        mostrarPantalla(openRegistrarButton, "usuariosListView.fxml", tituloPantalla);
+        mostrarPantalla(openRegistrarButton, "usuariosListView.fxml");
     }
 
     /**
@@ -173,7 +170,6 @@ public class LoginController extends AbstractController {
      */
     @FXML
     protected void openRecuperarContraseniaClick() {
-        String tituloPantalla = ConfigManager.ConfigProperties.getProperty("passwordTitle");
-        mostrarPantalla(buttonRecuperarContrasenia, "password.fxml", tituloPantalla);
+        mostrarPantalla(buttonRecuperarContrasenia, "password.fxml");
     }
 }

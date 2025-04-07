@@ -3,8 +3,10 @@ es/ies/puerto/model/abtrastas/Conexion.class
 es/ies/puerto/servicio/UsuarioServicio.class
 es/ies/puerto/config/ConfigManager$ConfigProperties.class
 module-info.class
+es/ies/puerto/controller/JuegoController.class
 es/ies/puerto/servicio/UsuarioServicio$1.class
 es/ies/puerto/controller/LoginController.class
+es/ies/puerto/controller/InicioController.class
 es/ies/puerto/PrincipalApplication.class
 es/ies/puerto/controller/UsuariosListViewController.class
 es/ies/puerto/config/ConfigManager.class

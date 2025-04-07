@@ -83,6 +83,6 @@ public class UsuariosListViewController extends AbstractController{
     @FXML
     protected void onVolverAtrasClick() {
         String tituloPantalla = ConfigManager.ConfigProperties.getProperty("loginTitle");
-        mostrarPantalla(buttonVolverAtras, "login.fxml", tituloPantalla);
+        mostrarPantalla(buttonVolverAtras, "login.fxml");
     }
   }
