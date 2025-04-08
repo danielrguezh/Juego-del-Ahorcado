@@ -55,11 +55,6 @@
             <Insets top="20.0" />
          </VBox.margin>
       </HBox>
-      <Button fx:id="tiendaButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onComprarClick" prefHeight="25.0" prefWidth="80.0" scaleZ="0.0" text="Tienda" translateX="-45.0" translateY="-35.0">
-         <VBox.margin>
-            <Insets left="320.0" top="10.0" />
-         </VBox.margin>
-      </Button>
       <Canvas fx:id="ahorcadoCanvas" height="276.0" translateY="-60.0" width="285.0">
          <VBox.margin>
             <Insets />

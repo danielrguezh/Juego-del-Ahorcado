@@ -15,11 +15,6 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
    <ComboBox fx:id="comboIdioma" onAction="#seleccionarIdiomaClick" prefWidth="150.0" promptText="Idioma" />
-   <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
-      <image>
-         <Image url="@img/icon.png" />
-      </image>
-   </ImageView>
    <Text fx:id="textUsuarioEmail" strokeType="OUTSIDE" strokeWidth="0.0" text="Usuario" />
    <TextField fx:id="textFieldUsuarioEmail" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Introducir Usuario" />
    <Text fx:id="textContrasenia" strokeType="OUTSIDE" strokeWidth="0.0" text="Contraseña" />

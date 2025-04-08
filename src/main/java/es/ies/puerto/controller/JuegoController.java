@@ -52,9 +52,6 @@ public class JuegoController extends AbstractController{
     private Text textMensaje;
 
     @FXML
-    private Button tiendaButton;
-
-    @FXML
     private Button insertarButton;
 
     @FXML
@@ -310,11 +307,17 @@ public class JuegoController extends AbstractController{
         }
     }
 
+    /**
+     * Metodo que reinicia la pantalla de juego
+     */
     @FXML
     protected void onReiniciarClick() {
         iniciarJuego();
     }
 
+    /**
+     * Metodo que redirige a la pantalla de profile
+     */
     @FXML
     protected void onVolverAtrasClick() {
         try {
