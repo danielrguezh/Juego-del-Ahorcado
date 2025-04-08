@@ -15,13 +15,13 @@ El Juego del Ahorcado es una aplicación interactiva desarrollada en JavaFX que 
 
 ## Requisitos del Sistema
 
-- **Java**: Versión 11 o superior.
-- **JavaFX**: Versión 17 o superior.
-- **Base de Datos**: SQLite (o cualquier otra base de datos compatible).
+- **Java**: Versión 17 o superior.
+- **JavaFX**: Versión 21 o superior.
+- **Base de Datos**: SQLite3 (o cualquier otra base de datos compatible).
 
 ## Instalación
 
 1. **Clona el Repositorio**:
    ```bash/ windows cmd
-   git clone https://github.com/tu-usuario/juego-del-ahorcado.git
-   cd juego-del-ahorcado
+   git clone https://github.com/danielrguezh/Juego-del-Ahorcado.git
+   cd Juego-del-Ahorcado
