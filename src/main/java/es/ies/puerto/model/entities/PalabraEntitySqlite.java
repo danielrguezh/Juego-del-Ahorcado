@@ -1,7 +1,11 @@
-package es.ies.puerto.model;
+package es.ies.puerto.model.entities;
 
 import java.util.Objects;
 
+/**
+ * @author danielrguezh
+ * @version 1.0.0
+ */
 public class PalabraEntitySqlite {
     
     private int id;
@@ -23,7 +27,7 @@ public class PalabraEntitySqlite {
     }
 
     /**
-     * Constructor con todas las propiedades
+     * Constructor con propiedades
      * @param id
      * @param palabra
      * @param idNivel

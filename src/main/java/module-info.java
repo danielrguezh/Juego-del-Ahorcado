@@ -11,9 +11,9 @@ module es.ies.puerto {
 
     opens es.ies.puerto to javafx.fxml;
     opens es.ies.puerto.controller to javafx.fxml;
-    opens es.ies.puerto.controller.abstractas to javafx.fxml;
+    opens es.ies.puerto.controller.abstractas to javafx.fxml; 
 
-    opens es.ies.puerto.model to com.fasterxml.jackson.databind,
+    opens es.ies.puerto.model.entities to com.fasterxml.jackson.databind, 
     org.junit.platform.commons, org.mockito, javafx.base;
 
     exports es.ies.puerto;

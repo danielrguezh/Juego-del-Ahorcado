@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import es.ies.puerto.model.abtrastas.Conexion;
+import es.ies.puerto.model.abstractas.Conexion;
 
 /**
  * @author danielrguezh
@@ -20,9 +20,9 @@ public class UsuarioServiceModel extends Conexion {
         super(unaRutaArchivoBD);
     }
 
-    public UsuarioEntity obtenerUsuarioPorEmail(String email) {
+    public UsuarioEntity obtenerUsuarioPorEmailUser(String input) {
         try {
-            String sql = "SELECT u.nombre, u.email FROM usuarios " + "as u where email='"+email+"'";
+            String sql = "SELECT u.nombre, u.email FROM usuarios " + "as u email='"+input+"' OR user='"+input+"'";
         ArrayList<UsuarioEntity> usuarios = obtenerUsuario(sql);
         if (usuarios.isEmpty()) {
             return null;

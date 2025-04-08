@@ -1,18 +1,21 @@
 package es.ies.puerto.controller.abstractas;
 
-import java.util.Properties;
+import java.lang.reflect.Method;
 
 import es.ies.puerto.PrincipalApplication;
 import es.ies.puerto.config.ConfigManager;
-import es.ies.puerto.controller.ProfileController;
-import es.ies.puerto.model.UsuarioEntity;
-import es.ies.puerto.model.UsuarioServiceModel;
+import es.ies.puerto.model.entities.UsuarioEntitySqlite;
+import es.ies.puerto.model.services.NivelServiceSqlite;
+import es.ies.puerto.model.services.PalabraServiceSqlite;
+import es.ies.puerto.model.services.UsuarioServiceSqlite;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -20,31 +23,41 @@ import javafx.stage.Stage;
  * @author danielrguezh
  * @version 1.0.0
  */
+
 public abstract class AbstractController {
 
-    static final String PATH_DB ="src/main/resources/usuarios.db";
-
-    private UsuarioServiceModel usuarioServiceModel;
-
-    private Properties propertiesIdioma;
-
+    static final String PATH_DB = "src/main/resources/usuarios.db";
+    private UsuarioServiceSqlite usuarioServiceSqlite;
+    private PalabraServiceSqlite palabraServiceSqlite;
+    private NivelServiceSqlite nivelServiceSqlite;
+    
+    /**
+     * Constructor por defecto
+     */
     public AbstractController() {
         try {
-            usuarioServiceModel = new UsuarioServiceModel(PATH_DB);
+            usuarioServiceSqlite = new UsuarioServiceSqlite(PATH_DB);
+            palabraServiceSqlite = new PalabraServiceSqlite(PATH_DB);
+            nivelServiceSqlite = new NivelServiceSqlite(PATH_DB);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
-    public void setpropertiesIdioma(Properties properties) {
-        propertiesIdioma = properties;
+    /**
+     * Getters and Setters
+     */
+    public UsuarioServiceSqlite getUsuarioServiceSqlite() {
+        return usuarioServiceSqlite;
     }
 
-    public Properties getPropertiesIdioma() {
-        return propertiesIdioma;
+    public PalabraServiceSqlite getPalabraServiceSqlite() {
+        return palabraServiceSqlite;
     }
 
+    public NivelServiceSqlite getNivelServiceSqlite() {
+        return nivelServiceSqlite;
+    }
 
     @FXML
     public Text textUsuario;
@@ -99,6 +112,9 @@ public abstract class AbstractController {
 
     @FXML
     private Text textListaUsuario;
+
+    @FXML
+    private Button buscarUsuariosButton;
 
     /**
      * Método para cambiar el idioma
@@ -176,13 +192,16 @@ public abstract class AbstractController {
         if (textListaUsuario != null) {
             textListaUsuario.setText(ConfigManager.ConfigProperties.getProperty("textListaUsuario"));
         }
+
+        if (buscarUsuariosButton != null) {
+            buscarUsuariosButton.setText(ConfigManager.ConfigProperties.getProperty("buscarUsuariosButton"));
+        }
     }
 
     /**
-     * Metodo que muestra una nueva pantalla en la aplicacion cargando los usuarios
-     * @param button sirve para obtener la ventana actual
-     * @param fxml ruta al archivo de la interfaz de la nueva pantalla
-     * @param titulo de la ventana
+     * Metodo que muestra una pantalla alterna en la aplicacion
+     * @param button
+     * @param fxml 
      */
     public void mostrarPantalla(Button button, String fxml) {
         if (button == null || fxml == null || fxml.isEmpty()) {
@@ -193,8 +212,9 @@ public abstract class AbstractController {
             FXMLLoader fxmlLoader = new FXMLLoader(PrincipalApplication.class.getResource(fxml));
             Scene scene = new Scene(fxmlLoader.load());
             scene.getStylesheets().add(getClass().getResource("/es/ies/puerto/css/style.css").toExternalForm());
-            stage.setTitle("Juego del Ahorcado.");
-            stage.setResizable(false);
+            Image icon = new Image(getClass().getResource("/es/ies/puerto/img/ahorcado.png").toExternalForm());
+            stage.getIcons().add(icon);
+            stage.setTitle("Juego del ahorcado");
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
@@ -203,36 +223,30 @@ public abstract class AbstractController {
     }
 
     /**
-     * Metodo que muestra una nueva pantalla en la aplicacion cargando los usuarios
-     * @param button sirve para obtener la ventana actual
-     * @param fxml ruta al archivo de la interfaz de la nueva pantalla
-     * @param titulo de la ventana
-     * @param usuario contiene los datos que se cargaran en la nueva pantalla
+     * Metodo que muestra una pantalla alterna en la aplicacion
+     * @param button
+     * @param fxml
+     * @param usuario datos almacenados en la nueva pantalla
      */
-    public void mostrarPantallaMasUsusarios(Button button, String fxml, UsuarioEntity usuario) {
-        if (button == null || fxml == null || fxml.isEmpty()) {
+    public void mostrarPantalla(Node node, String fxml, UsuarioEntitySqlite usuario) {
+        if (node == null || fxml == null || fxml.isEmpty() || usuario == null) {
             return;
         }
         try {
+            Stage stage = (Stage) node.getScene().getWindow();
             FXMLLoader fxmlLoader = new FXMLLoader(PrincipalApplication.class.getResource(fxml));
             Scene scene = new Scene(fxmlLoader.load());
             scene.getStylesheets().add(getClass().getResource("/es/ies/puerto/css/style.css").toExternalForm());
-            ProfileController profileController = fxmlLoader.getController();
-            profileController.cargarDatosUsuario(usuario);
-            Stage stage = (Stage) button.getScene().getWindow();
-            stage.setTitle("Juego del Ahorcado.");
-            stage.setResizable(false);
+            Object controller = fxmlLoader.getController();
+            Method method = controller.getClass().getMethod("cargarDatosUsuario", UsuarioEntitySqlite.class);
+            method.invoke(controller, usuario); 
+            Image icon = new Image(getClass().getResource("/es/ies/puerto/img/ahorcado.png").toExternalForm());
+            stage.getIcons().add(icon);
+            stage.setTitle("Juego del Ahorcado");
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
-    public UsuarioServiceModel getUsuarioServiceModel() {
-        return this.usuarioServiceModel;
-    }
-
-
 }

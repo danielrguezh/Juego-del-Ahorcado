@@ -10,21 +10,20 @@ import java.util.Properties;
  * @author danielrguezh
  * @version 1.0.0
  */
+
 public class ConfigManager {
 
     public static class ConfigProperties {
 
         static String path;
         private static final Properties properties = new Properties();
-        private static String idiomaActual = "es";
+        private static String idiomaActual = "es"; 
         
         static {
 
         }
 
-        /**
-         *  Metodo para obtener una propiedad
-         */
+        //getters/setters
         public static String getProperty(String key) {
             return properties.getProperty(key);
         }

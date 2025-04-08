@@ -12,6 +12,7 @@ import java.io.IOException;
  * @author danielrguezh
  * @version 1.0.0
  */
+
 public class PrincipalApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
@@ -19,8 +20,9 @@ public class PrincipalApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load());
         String css = this.getClass().getResource("css/style.css").toExternalForm();
         scene.getStylesheets().add(css);
-        stage.setTitle("Pantalla Princial");
-        stage.setResizable(false);
+        Image icon = new Image(getClass().getResource("/es/ies/puerto/img/ahorcado.png").toExternalForm());
+        stage.getIcons().add(icon);
+        stage.setTitle("Juego del Ahorcado");
         stage.setScene(scene);
         stage.show();
     }

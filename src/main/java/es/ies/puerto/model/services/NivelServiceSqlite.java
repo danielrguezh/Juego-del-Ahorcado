@@ -1,4 +1,4 @@
-package es.ies.puerto.servicio;
+package es.ies.puerto.model.services;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,22 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.ies.puerto.model.abstractas.Conexion;
-import es.ies.puerto.model.NivelEntitySqlite;
+import es.ies.puerto.model.entities.NivelEntitySqlite;
 
+/**
+ * @author danielrguezh
+ * @version 1.0.0
+ */
 public class NivelServiceSqlite extends Conexion{
 
-    /**
-     * Constructor vacio
-     */
     public NivelServiceSqlite() {
 
     }
 
-    /**
-     * Constructor con la ruta de la BBDD
-     * @param unaRutaArchivoBD
-     * @throws SQLException
-     */
     public NivelServiceSqlite(String unaRutaArchivoBD) throws SQLException {
         super(unaRutaArchivoBD);
     }

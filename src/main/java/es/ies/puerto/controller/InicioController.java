@@ -16,7 +16,15 @@ public class InicioController extends AbstractController{
     @FXML private Button regresarButton;
 
     /**
-     * va a la pantalla registrar
+     * Metodo de inicializacion de la interfaz
+     */
+    @FXML
+    public void initialize() {
+        cambiarIdioma();
+    }
+
+    /**
+     * Metodo que redirige a la pantalla registrar
      */
     @FXML
     public void inicioToRegistrarOnClick(){
@@ -24,7 +32,7 @@ public class InicioController extends AbstractController{
     }
 
     /**
-     * va a la pantalla de partida
+     * Metodo que redirige a la pantalla de partida
      */
     @FXML
     public void inicioToPartidaOnClick(){
@@ -32,7 +40,7 @@ public class InicioController extends AbstractController{
     }
 
     /**
-     * va a la pantalla de login
+     * Metodo que redirige a la pantalla de login
      */
     @FXML
     public void inicioToLoginOnClick(){

@@ -1,14 +1,11 @@
 package es.ies.puerto.controller;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import es.ies.puerto.config.ConfigManager;
 import es.ies.puerto.controller.abstractas.AbstractController;
-import es.ies.puerto.model.UsuarioEntity;
-import es.ies.puerto.servicio.UsuarioServicio;
+import es.ies.puerto.model.entities.UsuarioEntitySqlite;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -19,42 +16,36 @@ import javafx.scene.text.Text;
  * @author danielrguezh
  * @version 1.0.0
  */
-public class RegistroController extends AbstractController {
-    
-    UsuarioServicio usuarioServicioJson;
-    
-    /**
-     * Constructor por defecto
-     */
-    public RegistroController() {
-        usuarioServicioJson = new UsuarioServicio();
-    }
+
+public class RegistroController extends AbstractController{
+
+    private UsuarioEntitySqlite usuarioEditado;
 
     @FXML
     public Text textRegistroTitulo;
 
-    @FXML
+    @FXML 
     private TextField textFieldUsuario;
 
-    @FXML
+    @FXML 
     private PasswordField textFieldPassword;
 
-    @FXML
+    @FXML 
     private PasswordField textFieldPasswordRepit;
 
-    @FXML
+    @FXML 
     private TextField textFieldNombre;
 
-    @FXML
+    @FXML 
     private TextField textFieldEmail;
 
-    @FXML
+    @FXML 
     private TextField textFieldEmailRepit;
 
-    @FXML
+    @FXML 
     private Text textMensaje;
 
-    @FXML
+    @FXML 
     private Button openRegistrarButton;
 
     @FXML
@@ -69,8 +60,22 @@ public class RegistroController extends AbstractController {
     }
 
     /**
+     * Carga los datos del usuario en los campos de la interfaz grafica
+     * @param usuario con los datos que se mostraran en pantalla
+     */
+    public void cargarDatosUsuario(UsuarioEntitySqlite usuario) {
+        if (usuario != null) {
+            this.usuarioEditado = usuario;
+            textFieldUsuario.setText(usuario.getUser());
+            textFieldNombre.setText(usuario.getName());
+            textFieldEmail.setText(usuario.getEmail());
+        }
+    }
+
+    /**
      * Maneja el evento de clic en el boton de registro
      * Valida los datos ingresados por el usuario y crea un nuevo usuario si son correctos
+     * Muestra mensajes de error si los datos no cumplen con los requisitos
      */
     @FXML
     protected void onRegistrarButtonClick() {
@@ -105,33 +110,43 @@ public class RegistroController extends AbstractController {
         boolean equalPassword = textFieldPassword.getText().equals(textFieldPasswordRepit.getText());
         boolean equalEmail = textFieldEmail.getText().equals(textFieldEmailRepit.getText());
         if (equalPassword && equalEmail) {
-            //String hashedPassword = BCrypt.hashpw(textFieldPassword.getText(), BCrypt.gensalt());
-            UsuarioEntity usuario = new UsuarioEntity(textFieldUsuario.getText(), textFieldPassword.getText(), textFieldEmail.getText());
             try {
-                boolean insertar = getUsuarioServiceModel().addUsuario(usuario);
-                if (!insertar) {
-                    textMensaje.setText(ConfigManager.ConfigProperties.getProperty("errorUsuarioExiste"));
-                    return;
+                if (usuarioEditado == null) { 
+                    UsuarioEntitySqlite nuevoUsuario = new UsuarioEntitySqlite(
+                        textFieldUsuario.getText(),
+                        textFieldEmail.getText(),
+                        textFieldNombre.getText(),
+                        textFieldPassword.getText()
+                    );
+                    boolean insertado = getUsuarioServiceSqlite().insertarUsuario(nuevoUsuario);
+                    if (!insertado) {
+                        textMensaje.setText(ConfigManager.ConfigProperties.getProperty("errorUsuarioExiste"));
+                        return;
+                    }
+                    mostrarPantalla(openRegistrarButton, "profile.fxml", nuevoUsuario);
+                } else {
+                    usuarioEditado.setUser(textFieldUsuario.getText());
+                    usuarioEditado.setEmail(textFieldEmail.getText());
+                    usuarioEditado.setName(textFieldNombre.getText());
+                    if (!textFieldPassword.getText().equals("")) {
+                        usuarioEditado.setPassword(textFieldPassword.getText());
+                    }
+                    boolean actualizado = getUsuarioServiceSqlite().actualizarUsuario(usuarioEditado);
+                    if (!actualizado) {
+                        textMensaje.setText("Error al actualizar el usuario");
+                        return;
+                    }
+                    mostrarPantalla(openRegistrarButton, "profile.fxml", usuarioEditado);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            /** Codigo para el json
-            boolean insertar = usuarioServicioJson.add(usuario);
-            if (!insertar) {
-                textMensaje.setText(ConfigManager.ConfigProperties.getProperty("errorUsuarioExiste"));
-                return;
-            }
-            */
-            mostrarPantallaMasUsusarios(openRegistrarButton, "profile.fxml", usuario);
-            return;
         }
         textMensaje.setText(ConfigManager.ConfigProperties.getProperty("errorEmailOPasswordNoCoincide"));
     }
 
     /**
-     * Maneja el evento de clic en el boton de volver atras
-     * Redirige a la pantalla de inicio de sesion (login)
+     * Metodo que redirige a la pantalla de inicio de sesion (login)
      */
     @FXML
     protected void onVolverAtrasClick() {

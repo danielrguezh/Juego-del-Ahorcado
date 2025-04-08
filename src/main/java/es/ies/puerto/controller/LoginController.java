@@ -1,10 +1,13 @@
 package es.ies.puerto.controller;
 
+import java.sql.SQLException;
+import java.util.List;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 import es.ies.puerto.config.ConfigManager;
 import es.ies.puerto.controller.abstractas.AbstractController;
-import es.ies.puerto.model.UsuarioEntity;
-import es.ies.puerto.servicio.UsuarioServicio;
+import es.ies.puerto.model.entities.UsuarioEntitySqlite;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -17,18 +20,11 @@ import javafx.stage.Stage;
  * @author danielrguezh
  * @version 1.0.0
  */
-public class LoginController extends AbstractController {
+
+public class LoginController extends AbstractController{
+    
     private final String pathFichero="src/main/resources/";
     private final String ficheroStr= "idioma-";
-
-    UsuarioServicio usuarioServicioJson;
-    
-    /**
-     * Constructor por defecto
-     */
-    public LoginController() {
-        usuarioServicioJson = new UsuarioServicio();
-    }
 
     @FXML
     private ComboBox comboIdioma;
@@ -75,7 +71,11 @@ public class LoginController extends AbstractController {
     }
 
     /**
+     * Maneja el evento de seleccion de idioma en el ComboBox
      * Actualiza el idioma en la configuracion global
+     * Recarga las propiedades del nuevo idioma
+     * Actualiza todos los textos de la interfaz
+     * Refresca el titulo de la ventana
      */
     @FXML
     protected void seleccionarIdiomaClick() {
@@ -87,8 +87,8 @@ public class LoginController extends AbstractController {
     }
 
     /**
-     * Carga el archivo properties del idioma
-     * @param idioma
+     * Carga el archivo de propiedades del idioma especificado
+     * @param idioma Codigo del idioma a cargar (ej: "es", "en", "fr")
      */
     private void cargarIdioma(String idioma) {
         String path = pathFichero+ficheroStr+idioma+".properties";
@@ -99,15 +99,13 @@ public class LoginController extends AbstractController {
      * Actualiza dinamicamente el titulo de la ventana principal
      */
     public void actualizarTituloVentana() {
-        Stage stage = (Stage) textUsuarioEmail.getScene().getWindow();
+        Stage stage = (Stage) textUsuarioEmail.getScene().getWindow(); 
         String titulo = ConfigManager.ConfigProperties.getProperty("loginTitle");
         stage.setTitle(titulo);
     }
 
     /**
-     * Maneja el evento de clic en el boton de inicio de sesion
-     * Valida las credenciales del usuario y muestra mensajes de error si es necesario
-     * Si las credenciales son correctas, se redirige a la pantalla de perfil
+     * Metodo que valida las credenciales del usuario y redirige a la pantalla de perfil
      */
     @FXML
     protected void onLoginButtonClick() {
@@ -116,39 +114,26 @@ public class LoginController extends AbstractController {
             textMensaje.setText(ConfigManager.ConfigProperties.getProperty("errorCredencialesVacios"));
             return;
         }
-        UsuarioEntity usuario = getUsuarioServiceModel().obtenerUsuarioPorEmail(textFieldUsuarioEmail.getText());
-        if (usuario == null) {
-            textMensaje.setText(ConfigManager.ConfigProperties.getProperty("errorUsuarioNoEncontrado"));
-            return;
+        List<UsuarioEntitySqlite> usuarios;
+        try {
+            usuarios = getUsuarioServiceSqlite().obtenerUsuarioPorEmailOUser(textFieldUsuarioEmail.getText());
+            if (usuarios == null) { 
+                textMensaje.setText(ConfigManager.ConfigProperties.getProperty("errorUsuarioNoEncontrado"));
+                return;
+            }
+            boolean passwordCorrecta = textFieldPassword.getText().equals(usuarios.get(0).getPassword());
+            if (!passwordCorrecta) {
+                textMensaje.setText(ConfigManager.ConfigProperties.getProperty("errorContraseniaIncorrecta"));
+                return;
+            }
+            mostrarPantalla(openAceptarButton, "profile.fxml", usuarios.get(0));
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-         boolean passwordCorrecta = textFieldPassword.getText().equals(usuario.getPassword());
-        if (!passwordCorrecta) {
-            textMensaje.setText(ConfigManager.ConfigProperties.getProperty("errorContraseniaIncorrecta"));
-            return;
-        }
-        
-        mostrarPantallaMasUsusarios(openAceptarButton, "profile.fxml", usuario);
-
-        /** Codigo para el json
-        boolean passwordCorrecta = BCrypt.checkpw(textFieldPassword.getText(), usuario.getPassword());
-
-        UsuarioEntity usuario = usuarioServicio.buscarUsuarioPorCriterio(textFieldUsuario.getText(), UsuarioEntity::getUsuario);
-        if (usuario == null) {
-            textMensaje.setText(ConfigManager.ConfigProperties.getProperty("errorUsuarioNoEncontrado"));
-            return;
-        }
-        boolean passwordCorrecta = BCrypt.checkpw(textFieldPassword.getText(), usuario.getPassword());
-        if (!passwordCorrecta) {
-            textMensaje.setText(ConfigManager.ConfigProperties.getProperty("errorContraseniaIncorrecta"));
-            return;
-        }
-        */
     }
 
     /**
-     * Maneja el evento de clic en el boton de registro
-     * Redirige a la pantalla de registro
+     * Metodo que redirige a la pantalla de registro
      */
     @FXML
     protected void openRegistrarClick() {
@@ -156,17 +141,15 @@ public class LoginController extends AbstractController {
     }
 
     /**
-     * Maneja el evento de clic en el boton de listar usuarios
-     * Redirige a la pantalla de de lista de usuarios
+     * Metodo que redirige a la pantalla de de lista de usuarios
      */
     @FXML
     protected void openListarUsuariosClick() {
-        mostrarPantalla(openRegistrarButton, "usuariosListView.fxml");
+        mostrarPantalla(openListarUsuariosButton, "usuarios.fxml");
     }
 
     /**
-     * Maneja el evento de clic en el boton de recuperar contrasenia
-     * Redirige a la pantalla de recuperacion de contrasenia
+     * Metodo que redirige a la pantalla de recuperacion de contrasenia
      */
     @FXML
     protected void openRecuperarContraseniaClick() {
